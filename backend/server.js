@@ -11,11 +11,10 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "uploads")));
 
 // Connect to MongoDB
-mongoose.connect("mongodb://127.0.0.1:27017/portfolioDatabase", {
+mongoose.connect("mongodb://127.0.0.1:27017/portfolioDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 // Rating schema and model
 const ratingSchema = new mongoose.Schema({
@@ -334,7 +333,7 @@ app.get("/api/projects/:profileId", async (req, res) => {
   const { profileId } = req.params; // Get profile ID from the URL parameters
 
   try {
-    const projects = await Project.find({ profileId }); // Find projects related to the profile (assuming you have a profileId field in Project)
+    const projects = await Project.find({ profileId }); 
     res.json(projects); // Return the projects
   } catch (err) {
     console.error("Error fetching projects:", err);
@@ -394,56 +393,57 @@ app.post("/api/feedback", async (req, res) => {
   }
 });
 
-// app.post("/api/testimonials", async (req, res) => {
-//   const { email, userEmail, content, author, rating } = req.body;
+app.post("/api/testimonials", async (req, res) => {
+  const { email, userEmail, content, author, rating } = req.body;
 
-//   if (!email || !userEmail || !content || !author || !rating) {
-//     return res.status(400).json({ message: "All fields are required" });
-//   }
+  if (!email || !userEmail || !content || !author || !rating) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
-//   const testimonial = new Testimonial({
-//     email, 
-//     userEmail,
-//     author,
-//     rating,
-//   });
+  const testimonial = new Testimonial({
+    email, // Profile's email
+    userEmail, // Reviewer's email
+    content,
+    author,
+    rating,
+  });
 
-//   try {
-//     await testimonial.save();
-//     res.status(201).json({ message: "Testimonial submitted successfully" });
-//   } catch (err) {
-//     console.error("Error saving testimonial:", err);
-//     res
-//       .status(500)
-//       .json({ message: "Error saving testimonial", error: err.message });
-//   }
-// });
+  try {
+    await testimonial.save();
+    res.status(201).json({ message: "Testimonial submitted successfully" });
+  } catch (err) {
+    console.error("Error saving testimonial:", err);
+    res
+      .status(500)
+      .json({ message: "Error saving testimonial", error: err.message });
+  }
+});
 
 // Route for adding testimonials
-// app.post("/api/testimonials", async (req, res) => {
-//   const { email, userEmail, content, author, rating } = req.body;
+app.post("/api/testimonials", async (req, res) => {
+  const { email, userEmail, content, author, rating } = req.body;
 
-//   const testimonial = new Testimonial({
-//     email, // Profile's email
-//     userEmail, // Reviewer's email
-//     content,
-//     author,
-//     rating, // Rating given by the reviewer
-//   });
+  const testimonial = new Testimonial({
+    email, // Profile's email
+    userEmail, // Reviewer's email
+    content,
+    author,
+    rating, // Rating given by the reviewer
+  });
 
-//   try {
-//     // Save the testimonial
-//     await testimonial.save();
+  try {
+    // Save the testimonial
+    await testimonial.save();
 
-//     // Update the profile's rating
-//     await updateRating(email, rating);
+    // Update the profile's rating
+    await updateRating(email, rating);
 
-//     res.status(201).json({ message: "Testimonial added successfully" });
-//   } catch (err) {
-//     console.error("Error adding testimonial:", err);
-//     res.status(500).json({ message: "Error adding testimonial" });
-//   }
-// });
+    res.status(201).json({ message: "Testimonial added successfully" });
+  } catch (err) {
+    console.error("Error adding testimonial:", err);
+    res.status(500).json({ message: "Error adding testimonial" });
+  }
+});
 // Fetch portfolio data (projects, profile, testimonials, and ratings) by email
 app.get("/api/portfolio", async (req, res) => {
   const { email } = req.query; // Get email from query parameters
@@ -471,7 +471,7 @@ app.get("/api/portfolio", async (req, res) => {
     res.status(500).json({ message: "Error fetching portfolio data" });
   }
 });
-// Route to submit a testimonial
+
 // Route for adding testimonials and updating profile rating
 app.post("/api/testimonials", async (req, res) => {
   const { email, userEmail, content, author, rating, avgRating } = req.body;
