@@ -59,7 +59,7 @@ function displayProjects(projects) {
     .map(
       (project) => `
     <div class="portfolio-item">
-      <img src="https://via.placeholder.com/300" alt="${project.title}" />
+      <img src="https://picsum.photos/300/200" alt="${project.title}" />
       <h3>${project.title}</h3>
       <p>${project.description}</p>
       <a href="${project.link}" target="_blank" class="view-btn">Project Link</a>
@@ -150,7 +150,6 @@ document.getElementById("contactForm").addEventListener("submit", (e) => {
 // Dynamically set profile email in the testimonial form
 document.getElementById("profileEmail").value = email;
 
-// Handle testimonial form submission
 // Handle testimonial form submission
 document.getElementById("testimonialForm").addEventListener("submit", (e) => {
   e.preventDefault();
