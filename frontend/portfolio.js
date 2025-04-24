@@ -153,21 +153,13 @@ document.getElementById("profileEmail").value = email;
 // Handle testimonial form submission
 // Handle testimonial form submission
 document.getElementById("testimonialForm").addEventListener("submit", (e) => {
-  e.preventDefault(); // Prevent form submission
+  e.preventDefault();
 
   const profileEmail = document.getElementById("profileEmail").value;
   const author = document.getElementById("author").value;
   const rating = document.getElementById("rating").value;
   const content = document.getElementById("content").value;
 
-  // Calculate average rating (if required)
-  const avgRating = testimonials.length
-    ? (
-        testimonials.reduce((sum, t) => sum + t.rating, 0) / testimonials.length
-      ).toFixed(1)
-    : 0;
-
-  // Send testimonial and avgRating to server
   fetch("http://localhost:5000/api/testimonials", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -177,17 +169,18 @@ document.getElementById("testimonialForm").addEventListener("submit", (e) => {
       content,
       author,
       rating,
-      avgRating, // Send avgRating to server
     }),
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.message) {
-        alert(data.message); // Success
+        alert(data.message);
         document.getElementById("testimonialForm").reset();
       } else {
         alert("Error submitting testimonial.");
       }
     })
-    .catch((error) => console.error("Error submitting testimonial:", error));
+    .catch((error) =>
+      console.error("Error submitting testimonial:", error)
+    );
 });
